@@ -1,0 +1,37 @@
+version: '3.7'
+
+services:
+
+  master:
+    container_name: master
+    #image: locustio/locust
+    build:
+      context: .
+      dockerfile: Dockerfile    
+    ports:
+     - "8089:8089"
+    volumes:
+      - ./:/mnt/locust
+    env_file:
+      - common.env      
+    command: -f /mnt/locust/locustfile.py --config /mnt/locust/config/master.conf
+  
+  worker:
+    #image: locustio/locust
+    build:
+      context: .
+      dockerfile: Dockerfile    
+    volumes:
+      - ./:/mnt/locust
+    env_file:
+      - common.env      
+    command: -f /mnt/locust/locustfile.py --config /mnt/locust/config/worker.conf
+      
+  redis:
+    container_name: redis
+    image: redis:6.0.6-alpine
+    expose:
+      - 6379
+    ports:
+      - target: 6379
+        published: 6379
