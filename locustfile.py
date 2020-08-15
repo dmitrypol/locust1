@@ -9,7 +9,7 @@ import redis
 class WebUser(HttpUser):
     weight = 2
     wait_time = between(5, 9)
-    host = 'http://master:8089'
+    host = f'http://{os.environ.get("LOCUST_MASTER_NODE_HOST")}:8089'
 
     @task
     def index_page(self):
