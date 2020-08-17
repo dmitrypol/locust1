@@ -9,7 +9,7 @@ import redis
 class WebUser(HttpUser):
     weight = 2
     wait_time = between(5, 9)
-    host = f'http://{os.environ.get("LOCUST_MASTER_NODE_HOST")}:8089'
+    host = 'http://oracle.com'
 
     @task
     def index_page(self):
@@ -17,6 +17,7 @@ class WebUser(HttpUser):
         logging.info(resp)
 
 
+'''
 class RedisUser(User):
     weight = 3
     wait_time = between(1, 3)
@@ -35,3 +36,4 @@ class RedisUser(User):
     def on_stop(self):
         self.rc.flushdb()
         logging.info('on_stop')
+'''

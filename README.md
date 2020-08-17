@@ -26,7 +26,8 @@ terraform apply
 * Follow Quick Start
 * Open `~/.kube/` to view contents
 * Follow Access Kubernetes Dashboard 
-* Browse to http://localhost:8001/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/#!/login
+* `kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep oke-admin | awk '{print $1}')`
+* Browse to http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/login
 
 # Deploy to OKE
 

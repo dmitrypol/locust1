@@ -7,7 +7,7 @@ spec:
   selector:
     matchLabels:
       app: locust-worker
-  replicas: 1
+  replicas: 5
   template:
     metadata:
       labels:
@@ -22,6 +22,8 @@ spec:
         env:
         - name: REDIS_HOST
           value: locust-redis-service.default
+        - name: LOCUST_MODE_WORKER
+          value: 'true'
         - name: LOCUST_MASTER_NODE_HOST
           value: locust-master-service.default
         # - name: KEY_CONTENT

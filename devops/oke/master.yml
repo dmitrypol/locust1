@@ -22,15 +22,19 @@ spec:
         env:
         - name: REDIS_HOST
           value: locust-redis-service.default
+        - name: LOCUST_MODE_MASTER
+          value: 'true'
         - name: LOCUST_MASTER_BIND_HOST
           value: 0.0.0.0
+        - name: LOCUST_WEB_AUTH
+          value: admin:Password1234
       imagePullSecrets:
         - name: ocir-creds
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: locust-master-service
+  name: locust-master-service-web
   labels:
     app: locust-master
 spec:
@@ -40,9 +44,24 @@ spec:
       port: 80
       protocol: TCP
       targetPort: 8089
-    - name: locust
-      port: 5557
-      protocol: TCP
-      targetPort: 5557
+    # - name: locust
+    #   port: 5557
+    #   protocol: TCP
+    #   targetPort: 5557
+  selector:
+    app: locust-master
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: locust-master-service
+  labels:
+    app: locust-master
+spec:
+  type: NodePort
+  ports:
+  - name: locust-master
+    port: 5557
+    targetPort: 5557
   selector:
     app: locust-master
