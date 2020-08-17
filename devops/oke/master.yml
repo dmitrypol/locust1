@@ -1,0 +1,48 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: locust-master-deployment
+spec:
+  selector:
+    matchLabels:
+      app: locust-master
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: locust-master
+    spec:
+      containers:
+      - name: locust-master
+        #image: locustio/locust
+        image: iad.ocir.io/id5p2j2htymo/locust:latest
+        imagePullPolicy: Always
+        #command: ["-f /mnt/locust/locustfile.py --config /mnt/locust/config/master.conf"]
+        env:
+        - name: REDIS_HOST
+          value: locust-redis-service.default
+        - name: LOCUST_MASTER_BIND_HOST
+          value: 0.0.0.0
+      imagePullSecrets:
+        - name: ocir-creds
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: locust-master-service
+  labels:
+    app: locust-master
+spec:
+  type: LoadBalancer
+  ports:
+    - name: web
+      port: 80
+      protocol: TCP
+      targetPort: 8089
+    - name: locust
+      port: 5557
+      protocol: TCP
+      targetPort: 5557
+  selector:
+    app: locust-master

@@ -1,0 +1,33 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: locust-worker-deployment
+spec:
+  selector:
+    matchLabels:
+      app: locust-worker
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: locust-worker
+    spec:
+      containers:
+      - name: locust-worker
+        #image: locustio/locust
+        image: iad.ocir.io/id5p2j2htymo/locust:latest
+        imagePullPolicy: Always
+        #command: ["-f /mnt/locust/locustfile.py --config /mnt/locust/config/worker.conf"]
+        env:
+        - name: REDIS_HOST
+          value: locust-redis-service.default
+        - name: LOCUST_MASTER_NODE_HOST
+          value: locust-master-service.default
+        # - name: KEY_CONTENT
+        #   valueFrom:
+        #     secretKeyRef:
+        #       name: key-content
+        #       key: oci_api_key.pem
+      imagePullSecrets:
+        - name: ocir-creds

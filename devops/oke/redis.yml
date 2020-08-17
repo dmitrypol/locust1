@@ -1,0 +1,35 @@
+---
+apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+kind: Deployment
+metadata:
+  name: locust-redis-deployment
+spec:
+  selector:
+    matchLabels:
+      app: locust-redis
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: locust-redis
+    spec:
+      containers:
+      - name: locust-redis
+        image: redis:6.0.6-alpine
+        ports:
+        - containerPort: 6379
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: locust-redis-service
+  labels:
+    app: locust-redis
+spec:
+  type: NodePort
+  ports:
+  - name: locust-redis
+    port: 6379
+    targetPort: 6379
+  selector:
+    app: locust-redis

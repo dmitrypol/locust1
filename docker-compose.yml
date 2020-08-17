@@ -10,22 +10,26 @@ services:
       dockerfile: Dockerfile    
     ports:
      - "8089:8089"
-    volumes:
-      - ./:/mnt/locust
+    # volumes:
+    #   - ./:/mnt/locust
     env_file:
       - common.env      
-    command: -f /mnt/locust/locustfile.py --config /mnt/locust/config/master.conf
+    environment: 
+      LOCUST_MODE_MASTER: 'true'
+    # command: -f /mnt/locust/locustfile.py --config /mnt/locust/config/master.conf
   
   worker:
     #image: locustio/locust
     build:
       context: .
       dockerfile: Dockerfile    
-    volumes:
-      - ./:/mnt/locust
+    # volumes:
+    #   - ./:/mnt/locust
     env_file:
-      - common.env      
-    command: -f /mnt/locust/locustfile.py --config /mnt/locust/config/worker.conf
+      - common.env
+    environment: 
+      LOCUST_MODE_WORKER: 'true'
+    # command: -f /mnt/locust/locustfile.py --config /mnt/locust/config/worker.conf
       
   redis:
     container_name: redis
